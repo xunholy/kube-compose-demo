@@ -18,6 +18,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+app.get('/', function (req, res) {
+    res.send('Success!')
+});
+
 app.post('/send', async (req, res) => {
     if (req.method === 'OPTIONS') {
         // Set CORS headers for preflight requests
