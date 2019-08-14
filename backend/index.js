@@ -23,15 +23,16 @@ app.get('/', function (req, res) {
 });
 
 app.post('/send', async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*')
     if (req.method === 'OPTIONS') {
         // Set CORS headers for preflight requests
         // Allows GETs from any origin with the Content-Type header
         // and caches preflight response for 3600s
         // Send response to OPTIONS requests
-        response.set('Access-Control-Allow-Methods', 'POST');
-        response.set('Access-Control-Allow-Headers', 'Content-Type');
-        response.set('Access-Control-Max-Age', '3600');
-        response.status(204).send('');
+        res.set('Access-Control-Allow-Methods', 'POST');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
     } else {
         console.log(req.body)
         let msg = await client.messages.create(
@@ -39,7 +40,6 @@ app.post('/send', async (req, res) => {
             req.body.destination,
             req.body.message
         )
-        res.set('Access-Control-Allow-Origin', '*')
         res.send('Message Sent: ' + JSON.stringify(msg))
     }
 })

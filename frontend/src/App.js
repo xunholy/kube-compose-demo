@@ -26,7 +26,7 @@ export default class App extends Component {
         'Accept': 'application/json'
       }
     }
-    axios.post('http://localhost:8081/send', fields, config)
+    axios.post('http://backend:8081/send', fields, config)
       .then(res => {
         console.log(res)
       })
