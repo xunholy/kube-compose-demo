@@ -1,0 +1,18 @@
+{
+  "name": "plivo-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker": "docker build --build-arg=AUTH_ID=$AUTH_ID --build-arg=AUTH_TOKEN=$AUTH_TOKEN -t demo:latest .",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "plivo": "^4.1.3"
+  }
+}
