@@ -12,3 +12,7 @@ services:
     image: backend:latest
     ports:
       - "8081:8081"
+
+x-kube-compose:
+  cluster_image_storage:
+    type: 'docker'
