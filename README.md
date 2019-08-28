@@ -99,14 +99,28 @@ Note: You will need to authenticate to a kubernetes cluster, if no authenticatio
 
 ```bash
 $ source env.sh
-$ kube-compose up
+$ kube-compose up -d frontend backend
 ```
-Press ctrl-c when you are finished.
+
+To open the frontend in the browser, you will have to port-forward (both the backend and frontend):
+
+Note: If there is a good use-case we may add automatic creation of ingress resources ([#181](https://github.com/kube-compose/kube-compose/issues/181)).
+
+```bash
+$ kubectl port-forward backend-build1 :8081
+$ kubectl port-forward frontend-build1 :3000
+```
 
 To view the pods and services created by `kube-compose`:
 ```bash
 $ kubectl get all -owide --show-labels
 ```
+
+To run the tests against the environment, in the foreground, run the following command:
+```bash
+$ kube-compose up test-runner
+```
+
 
 #### Stop
 
