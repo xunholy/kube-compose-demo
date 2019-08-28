@@ -8,5 +8,5 @@ docker build --tag backend:latest .
 cd "$CONTAINING_DIR"/frontend
 docker build --tag frontend:latest .
 
-cd "$CONTAINING_DIR"/test_runner
-docker build --tag test_runner:latest .
+cd "$CONTAINING_DIR"/test-runner
+docker build --tag test-runner:latest .

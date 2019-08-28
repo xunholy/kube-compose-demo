@@ -1,27 +1,30 @@
 version: '2.3'
-
 services:
   backend:
-    image: backend:latest
-    environment:
-    - AUTH_ID
-    - AUTH_TOKEN
-    - PORT=8081
-    ports:
-    - '8081:8081'
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8081/"]
-      start_period: 5s
+    environment: ["AUTH_ID", "AUTH_TOKEN", "PORT=8081"]
+    healthcheck: &healthcheck
+      test: ["CMD-SHELL", "exec curl --fail http://localhost:$$PORT/"]
       retries: 3
+      interval: 3s
+    image: backend:latest
+    ports: ["8081:8081"]
 
   frontend:
-    image: frontend:latest
-    depends_on:
+    depends_on: &pre-reqs
       backend:
         condition: service_healthy
-    ports:
-    - '3000:3000'
+    environment: ["PORT=3000"]
+    healthcheck: *healthcheck
+    image: frontend:latest
+    ports: ["3000:3000"]
+
+  test-runner:
+    image: test-runner:latest
+    entrypoint: ["/mnt/run-tests.sh"]
+    depends_on: *pre-reqs
+    volumes: ["./run-tests.sh:/mnt/run-tests.sh:ro"]
 
 x-kube-compose:
   cluster_image_storage:
     type: 'docker'
+  volume_init_base_image: ubuntu:latest

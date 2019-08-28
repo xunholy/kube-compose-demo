@@ -23,12 +23,7 @@ $ ./build_images.sh
 
 ## Running
 
-The backend service authenticates with [plivo](https://plivo.com) as a third party that provides SMS services. The `AUTH_ID` and `AUTH_TOKEN` environment variables are passed into the docker containers via docker-compose and kube-compose, so please set them:
-
-```bash
-$ export AUTH_ID=<place-id-here>
-$ export AUTH_TOKEN=<place-token-here>
-```
+Update the plivo credentials in `env.sh`.
 
 ### Docker-Compose
 
@@ -39,6 +34,7 @@ Run both the frontend and backend services in containers with docker-compose usi
 Note: Use the `-d` flag if you wish to run detach mode to run the containers in the background and not print their logs. 
 
 ```bash
+$ source env.sh
 $ docker-compose up
 ```
 
@@ -82,6 +78,7 @@ Success!
 Stop all running services with docker-compose using the following command:
 
 ```bash
+$ source env.sh
 $ docker-compose down
 ```
 
@@ -98,16 +95,24 @@ Running CI in a kubernetes cluster provides the benifits of running your applica
 
 Run both the frontend and backend services in containers with kube-compose using the following command:
 
-Note: You will need to authenticate to a kubernetes cluster, if no authentication is provided it will use your default kube context found at `~/.kube/config`.
+Note: You will need to authenticate to a kubernetes cluster, if no authentication is provided it will use your current kube context set in your kube config (i.e. `~/.kube/config`).
 
 ```bash
-$ kube-compose --env-id ci-environment --file docker-compose.yaml --log-level debug up
+$ source env.sh
+$ kube-compose up
+```
+Press ctrl-c when you are finished.
+
+To view the pods and services created by `kube-compose`:
+```bash
+$ kubectl get all -owide --show-labels
 ```
 
 #### Stop
 
-Stop all running services and cleanup all kubernetes resources that were created.
+Stop all running services and cleanup all Kubernetes resources that were created.
 
 ```bash
-$ kube-compose --env-id ci-environment --file docker-compose.yaml down
+$ source env.sh
+$ kube-compose down
 ```
