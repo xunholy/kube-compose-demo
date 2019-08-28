@@ -12,37 +12,23 @@ This example we will rely upon docker and docker-compose as a easy way to config
 
 The following are required to run this demo:
 
-- npm / node - https://www.npmjs.com/get-npm
 - docker - https://docs.docker.com
 - docker-compose - https://docs.docker.com/compose/install/
 - kube-compose - https://github.com/kube-compose/kube-compose#Installation
 
-### Build Frontend Service
-
-To build the docker image for the frontend service do the following:
-
+### Building images for the frontend and backend
 ```bash
-$ cd frontend
-$ docker build -t frontend:latest . --no-cache
+$ ./build_images.sh
 ```
 
-### Build Backend Service
+## Running
 
-The backend service authenticates with [plivo](https://plivo.com) as a third party that provides SMS services. The `AUTH_ID` and `AUTH_TOKEN` values are passed into the docker image as `--build-args`, to keep this simple set these values as environment variables.
+The backend service authenticates with [plivo](https://plivo.com) as a third party that provides SMS services. The `AUTH_ID` and `AUTH_TOKEN` environment variables are passed into the docker containers via docker-compose and kube-compose, so please set them:
 
 ```bash
 $ export AUTH_ID=<place-id-here>
 $ export AUTH_TOKEN=<place-token-here>
 ```
-
-Once the above enviornment values have been set you can build the backend service using the following:
-
-```bash
-$ cd backend
-$ docker build --build-arg=AUTH_ID=$AUTH_ID --build-arg=AUTH_TOKEN=$AUTH_TOKEN -t backend:latest . --no-cache
-```
-
-## Running
 
 ### Docker-Compose
 
@@ -53,7 +39,7 @@ Run both the frontend and backend services in containers with docker-compose usi
 Note: Use the `-d` flag if you wish to run detach mode to run the containers in the background and not print their logs. 
 
 ```bash
-$ docker-compose -f docker-compose.yaml up
+$ docker-compose up
 ```
 
 You can now view frontend in the browser.
@@ -96,7 +82,7 @@ Success!
 Stop all running services with docker-compose using the following command:
 
 ```bash
-$ docker-compose -f docker-compose.yaml down
+$ docker-compose down
 ```
 
 

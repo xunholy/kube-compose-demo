@@ -1,17 +1,26 @@
-version: '3'
+version: '2.3'
 
 services:
+  backend:
+    image: backend:latest
+    environment:
+    - AUTH_ID
+    - AUTH_TOKEN
+    - PORT=8081
+    ports:
+    - '8081:8081'
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8081/"]
+      start_period: 5s
+      retries: 3
 
   frontend:
     image: frontend:latest
-    depends_on: ['backend']
+    depends_on:
+      backend:
+        condition: service_healthy
     ports:
-      - "3000:3000"
-
-  backend:
-    image: backend:latest
-    ports:
-      - "8081:8081"
+    - '3000:3000'
 
 x-kube-compose:
   cluster_image_storage:
