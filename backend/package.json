@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "docker": "docker build --build-arg=AUTH_ID=$AUTH_ID --build-arg=AUTH_TOKEN=$AUTH_TOKEN -t demo:latest .",
     "start": "node index.js"
   },
   "author": "",

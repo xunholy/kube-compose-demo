@@ -1,11 +1,8 @@
-FROM node
+FROM node:12
 
-# Build Args
-ARG AUTH_ID
-ARG AUTH_TOKEN
-
-# Run time environment variables
-ENV AUTH_ID=${AUTH_ID} AUTH_TOKEN=${AUTH_TOKEN}
+# Set the default port of the backend
+ENV PORT=8081
+EXPOSE 8081
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -15,13 +12,11 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
+RUN npm install
 
 # Bundle app source
 COPY . .
 
-EXPOSE 8081
-
-CMD [ "npm", "start" ]
+CMD [ "node", "index.js" ]

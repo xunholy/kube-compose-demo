@@ -12,37 +12,18 @@ This example we will rely upon docker and docker-compose as a easy way to config
 
 The following are required to run this demo:
 
-- npm / node - https://www.npmjs.com/get-npm
 - docker - https://docs.docker.com
 - docker-compose - https://docs.docker.com/compose/install/
 - kube-compose - https://github.com/kube-compose/kube-compose#Installation
 
-### Build Frontend Service
-
-To build the docker image for the frontend service do the following:
-
+### Building images for the frontend and backend
 ```bash
-$ cd frontend
-$ docker build -t frontend:latest . --no-cache
-```
-
-### Build Backend Service
-
-The backend service authenticates with [plivo](https://plivo.com) as a third party that provides SMS services. The `AUTH_ID` and `AUTH_TOKEN` values are passed into the docker image as `--build-args`, to keep this simple set these values as environment variables.
-
-```bash
-$ export AUTH_ID=<place-id-here>
-$ export AUTH_TOKEN=<place-token-here>
-```
-
-Once the above enviornment values have been set you can build the backend service using the following:
-
-```bash
-$ cd backend
-$ docker build --build-arg=AUTH_ID=$AUTH_ID --build-arg=AUTH_TOKEN=$AUTH_TOKEN -t backend:latest . --no-cache
+$ ./build_images.sh
 ```
 
 ## Running
+
+Update the plivo credentials in `env.sh`.
 
 ### Docker-Compose
 
@@ -53,7 +34,8 @@ Run both the frontend and backend services in containers with docker-compose usi
 Note: Use the `-d` flag if you wish to run detach mode to run the containers in the background and not print their logs. 
 
 ```bash
-$ docker-compose -f docker-compose.yaml up
+$ source env.sh
+$ docker-compose up
 ```
 
 You can now view frontend in the browser.
@@ -96,7 +78,8 @@ Success!
 Stop all running services with docker-compose using the following command:
 
 ```bash
-$ docker-compose -f docker-compose.yaml down
+$ source env.sh
+$ docker-compose down
 ```
 
 
@@ -112,16 +95,39 @@ Running CI in a kubernetes cluster provides the benifits of running your applica
 
 Run both the frontend and backend services in containers with kube-compose using the following command:
 
-Note: You will need to authenticate to a kubernetes cluster, if no authentication is provided it will use your default kube context found at `~/.kube/config`.
+Note: You will need to authenticate to a kubernetes cluster, if no authentication is provided it will use your current kube context set in your kube config (i.e. `~/.kube/config`).
 
 ```bash
-$ kube-compose --env-id ci-environment --file docker-compose.yaml --log-level debug up
+$ source env.sh
+$ kube-compose up -d frontend backend
 ```
+
+To open the frontend in the browser, you will have to port-forward (both the backend and frontend):
+
+Note: If there is a good use-case we may add automatic creation of ingress resources ([#181](https://github.com/kube-compose/kube-compose/issues/181)).
+
+```bash
+$ kubectl port-forward backend-build1 8081:8081
+$ kubectl port-forward frontend-build1 3000:3000
+$ open http://localhost:3000/
+```
+
+To view the pods and services created by `kube-compose`:
+```bash
+$ kubectl get all -owide --show-labels
+```
+
+To run the tests against the environment, in the foreground, run the following command:
+```bash
+$ kube-compose up test-runner
+```
+
 
 #### Stop
 
-Stop all running services and cleanup all kubernetes resources that were created.
+Stop all running services and cleanup all Kubernetes resources that were created.
 
 ```bash
-$ kube-compose --env-id ci-environment --file docker-compose.yaml down
+$ source env.sh
+$ kube-compose down
 ```
