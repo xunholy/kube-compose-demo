@@ -107,8 +107,9 @@ To open the frontend in the browser, you will have to port-forward (both the bac
 Note: If there is a good use-case we may add automatic creation of ingress resources ([#181](https://github.com/kube-compose/kube-compose/issues/181)).
 
 ```bash
-$ kubectl port-forward backend-build1 :8081
-$ kubectl port-forward frontend-build1 :3000
+$ kubectl port-forward backend-build1 8081:8081
+$ kubectl port-forward frontend-build1 3000:3000
+$ open http://localhost:3000/
 ```
 
 To view the pods and services created by `kube-compose`:
